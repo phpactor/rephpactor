@@ -19,10 +19,12 @@ class ExtensionWriter
     }
 
     /**
-     * @param Package[] $packages
+     * @param PackageInterface[] $packages
      */
     public function writeExtensionList(iterable $packages)
     {
+        $packages = PhpactorExtensionPackage::filter($packages);
+
         $code = [
             '<?php',
             '// ' . date('c'),

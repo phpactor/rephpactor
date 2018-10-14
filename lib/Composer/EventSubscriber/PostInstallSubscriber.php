@@ -34,6 +34,6 @@ class PostInstallSubscriber implements EventSubscriberInterface
     public function handlePostPackageInstall(Event $event)
     {
         $repository = $event->getComposer()->getRepositoryManager()->getLocalRepository();
-        $this->extensionWriter->writeExtensionList(PhpactorExtensionPackage::filter($repository->getPackages()));
+        $this->extensionWriter->writeExtensionList($repository->getPackages());
     }
 }

@@ -38,7 +38,7 @@ class Rephpactor
                 }
 
                 fwrite(STDERR, sprintf('Extension class "%s" does not exist', $className).PHP_EOL);
-            }, require('phpactor-extensions.php'))));
+            }, require($parameters[ComposerExtension::PARAM_EXTENSION_LIST_PATH]))));
         }
 
         $parameters = $this->resolveParameters($extensions, $parameters);
