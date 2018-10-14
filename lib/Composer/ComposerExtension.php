@@ -55,7 +55,6 @@ class ComposerExtension implements Extension
     private function registerComposer(ContainerBuilder $container)
     {
         $container->register('composer.composer', function (Container $container) {
-            $originalComposerVendorDir = getenv('COMPOSER_VENDOR_DIR');
             $vendorDir = $container->getParameter(self::PARAM_EXTENSION_PATH);
             putenv('COMPOSER_VENDOR_DIR='.$vendorDir);
 
@@ -64,7 +63,7 @@ class ComposerExtension implements Extension
                 $container->getParameter(self::PARAM_EXTENSION_FILENAME)
             );
 
-            putenv('COMPOSER_VENDOR_DIR='.$originalComposerVendorDir);
+            putenv('COMPOSER_VENDOR_DIR');
 
             return $composer;
         });
