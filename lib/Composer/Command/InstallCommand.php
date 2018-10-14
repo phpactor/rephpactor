@@ -15,7 +15,6 @@ class InstallCommand extends Command
      */
     private $installer;
 
-
     public function __construct(Installer $installer)
     {
         parent::__construct();

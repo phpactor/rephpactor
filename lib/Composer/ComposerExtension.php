@@ -56,20 +56,21 @@ class ComposerExtension implements Extension
     {
         $container->register('composer.composer', function (Container $container) {
             $vendorDir = $container->getParameter(self::PARAM_EXTENSION_PATH);
-            putenv('COMPOSER_VENDOR_DIR='.$vendorDir);
 
             $composer = Factory::create(
                 $container->get('composer.io'),
                 $container->getParameter(self::PARAM_EXTENSION_FILENAME)
             );
 
-            putenv('COMPOSER_VENDOR_DIR');
-
             return $composer;
         });
         
         $container->register('composer.installer', function (Container $container) {
-            $installer = Installer::create($container->get('composer.io'), $container->get('composer.composer'));
+                $composer = $container->get('composer.composer');
+            $installer = Installer::create(
+                $container->get('composer.io'),
+                $container->get('composer.composer')
+            );
             $installer->setAdditionalInstalledRepository($container->get('composer.repository.local'));
 
             return $installer;
@@ -90,16 +91,29 @@ class ComposerExtension implements Extension
         $container->register('composer.repository.local', function (Container $container) {
             return new CompositeRepository([
                 new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor/composer/installed.json')),
+                // required??
+                new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor/dflydev/embedded-composer/.root_package.json')),
             ]);
         });
     }
 
     public function initialize(Container $container): void
     {
-        $path = $container->getParameter(self::PARAM_EXTENSION_FILENAME);
+        $this->initializeExtensionComposerFile($container);
+    }
 
-        if (!file_exists($path)) {
-            file_put_contents($path, '{}');
+    private function initializeExtensionComposerFile(Container $container): void
+    {
+        $path = $container->getParameter(self::PARAM_EXTENSION_FILENAME);
+        
+        if (file_exists($path)) {
+            return;
         }
+
+        file_put_contents($path, json_encode([
+            'config' => [
+                'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_PATH)
+            ]
+        ], JSON_PRETTY_PRINT));
     }
 }
