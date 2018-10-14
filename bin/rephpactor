@@ -1,12 +1,11 @@
 #!/bin/env php
 <?php
 
-use Rephpactor\Rephpactor;
-
+use Phpactor\Rephpactor;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$container = Rephpactor::build();
+$container = (new Rephpactor())->build();
 $container->get('core.console.application')->run(
     $container->get('core.console.input'),
     $container->get('core.console.output')

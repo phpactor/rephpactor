@@ -1,6 +1,6 @@
 <?php
 
-namespace Rephpactor\Core;
+namespace Phpactor\Core;
 
 use Composer\Factory;
 use Composer\IO\ConsoleIO;
@@ -8,12 +8,13 @@ use Composer\Installer;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\MapResolver\Resolver;
-use Rephpactor\Composer\Command\InstallCommand;
-use Rephpactor\Extension;
+use Phpactor\Composer\Command\InstallCommand;
+use Phpactor\Extension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\StreamOutput;
 
 class CoreExtension implements Extension
@@ -22,9 +23,6 @@ class CoreExtension implements Extension
 
     public function configure(Resolver $resolver): void
     {
-        $resolver->setDefaults([
-            'core.extension.filename' => 'rephpactor-extensions.json',
-        ]);
     }
 
     public function build(ContainerBuilder $container): void
@@ -49,7 +47,7 @@ class CoreExtension implements Extension
         });
 
         $container->register('core.console.output', function () {
-            return new StreamOutput(STDOUT);
+            return new ConsoleOutput();
         });
     }
 

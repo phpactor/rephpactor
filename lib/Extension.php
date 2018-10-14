@@ -1,6 +1,6 @@
 <?php
 
-namespace Rephpactor;
+namespace Phpactor;
 
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;

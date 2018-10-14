@@ -1,6 +1,6 @@
 <?php
 
-namespace Rephpactor\Composer\Command;
+namespace Phpactor\Composer\Command;
 
 use Composer\Composer;
 use Composer\Installer;
