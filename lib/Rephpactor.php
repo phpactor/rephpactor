@@ -35,6 +35,12 @@ class Rephpactor
             $extension->build($containerBuilder);
         }
 
-        return $containerBuilder->build($parameters);
+        $container = $containerBuilder->build($parameters);
+
+        foreach ($extensions as $extension) {
+            $extension->initialize($container);
+        }
+
+        return $container;
     }
 }

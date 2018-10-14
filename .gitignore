@@ -1,0 +1,9 @@
+/vendor
+/vendor-ext
+/.php_cs.cache
+/composer.lock
+/.phpactor.yml
+/.phpactor/*
+/.php_cs.cache
+/.phpunit.result.cache
+/rephpactor-ext.json

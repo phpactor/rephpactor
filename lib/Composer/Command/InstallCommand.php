@@ -11,11 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class InstallCommand extends Command
 {
     /**
-     * @var Composer
-     */
-    private $composer;
-
-    /**
      * @var Installer
      */
     private $installer;
@@ -24,7 +19,6 @@ class InstallCommand extends Command
     public function __construct(Installer $installer)
     {
         parent::__construct();
-        $this->composer = $composer;
         $this->installer = $installer;
     }
 
@@ -35,6 +29,6 @@ class InstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $installer->run();
+        $this->installer->run();
     }
 }

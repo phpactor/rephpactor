@@ -52,4 +52,8 @@ class CoreExtension implements Extension
             return new StreamOutput(STDOUT);
         });
     }
+
+    public function initialize(Container $container): void
+    {
+    }
 }
