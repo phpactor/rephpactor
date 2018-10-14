@@ -2,6 +2,7 @@
     "name": "phpactor/rephpactor",
     "description": "Extensible PHP Language Server",
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Daniel Leech",
@@ -9,6 +10,10 @@
         }
     ],
     "require": {
+        "phpactor/language-server": "^1.0@dev",
+        "dflydev/embedded-composer": "^1.0@dev",
+        "phpactor/container": "^1.0",
+        "phpactor/map-resolver": "dev-master"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.3",
