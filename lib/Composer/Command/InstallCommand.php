@@ -24,6 +24,7 @@ class InstallCommand extends Command
     protected function configure()
     {
         $this->setName('extension:install');
+        $this->setDescription('Install extensions');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

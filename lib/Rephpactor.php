@@ -9,19 +9,28 @@ use Phpactor\MapResolver\Resolver;
 use Rephpactor\Composer\ComposerExtension;
 use Rephpactor\Core\CoreExtension;
 use Rephpactor\Extension;
+use Rephpactor\LanguageServer\LanguageServerExtension;
 use Symfony\Component\Console\Input\ArgvInput;
 
 class Rephpactor
 {
     public function build(): Container
     {
+        $parameters = [
+            ComposerExtension::PARAM_EXTENSION_PATH => 'vendor-ext'
+        ];
+        $extensionAutoload = $parameters[ComposerExtension::PARAM_EXTENSION_PATH] . '/autoload.php';
+
+        if (file_exists($extensionAutoload)) {
+            require($extensionAutoload);
+        }
+
         /** @var Extension[] $extensions */
         $extensions = [
             new CoreExtension(),
             new ComposerExtension(),
         ];
 
-        $parameters = [];
         foreach ($extensions as $extension) {
             $resolver = new Resolver();
             $extension->configure($resolver);

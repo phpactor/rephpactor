@@ -103,7 +103,6 @@ class ComposerExtension implements Extension
     public function initialize(Container $container): void
     {
         $this->initializeExtensionComposerFile($container);
-        $this->includeAutoloader($container);
     }
 
     private function initializeExtensionComposerFile(Container $container): void
@@ -119,14 +118,5 @@ class ComposerExtension implements Extension
                 'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_PATH)
             ]
         ], JSON_PRETTY_PRINT));
-    }
-
-    private function includeAutoloader(Container $container)
-    {
-        $autoloadPath = $container->getParameter(self::PARAM_EXTENSION_PATH) . '/autoload.php';
-
-        if (file_exists($autoloadPath)) {
-            require($autoloadPath);
-        }
     }
 }

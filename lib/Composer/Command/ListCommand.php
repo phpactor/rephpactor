@@ -26,6 +26,7 @@ class ListCommand extends Command
     protected function configure()
     {
         $this->setName('extension:list');
+        $this->setDescription('List extensions');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
