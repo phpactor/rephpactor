@@ -18,7 +18,8 @@ class Rephpactor
     public function build(): Container
     {
         $parameters = [
-            ComposerExtension::PARAM_EXTENSION_PATH => 'vendor-ext'
+            ComposerExtension::PARAM_EXTENSION_PATH => 'vendor-ext',
+            ComposerExtension::PARAM_EXTENSION_LIST_PATH => 'config/extensions.php',
         ];
 
         $this->bootstrapExtensionAutoload($parameters);
@@ -28,8 +29,17 @@ class Rephpactor
             new CoreExtension(),
             new ComposerExtension(),
             new LoggingExtension(),
-            new LanguageServerExtension(),
         ];
+
+        if (file_exists($parameters[ComposerExtension::PARAM_EXTENSION_LIST_PATH])) {
+            $extensions = array_merge($extensions, array_filter(array_map(function (string $className) {
+                if (class_exists($className)) {
+                    return new $className;
+                }
+
+                fwrite(STDERR, sprintf('Extension class "%s" does not exist', $className).PHP_EOL);
+            }, require('phpactor-extensions.php'))));
+        }
 
         $parameters = $this->resolveParameters($extensions, $parameters);
         $container  = $this->buildContainer($extensions, $parameters);
@@ -40,11 +50,11 @@ class Rephpactor
 
     private function resolveParameters(array $extensions, array $parameters): array
     {
+        $resolver = new Resolver();
         foreach ($extensions as $extension) {
-            $resolver = new Resolver();
             $extension->configure($resolver);
-            $parameters = array_merge($parameters, $resolver->resolve([]));
         }
+        $parameters = $resolver->resolve($parameters);
 
         return $parameters;
     }

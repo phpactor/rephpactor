@@ -1,4 +1,5 @@
 /vendor
+/config/extensions.php
 /vendor-ext
 /.php_cs.cache
 /composer.lock
@@ -7,3 +8,4 @@
 /.php_cs.cache
 /.phpunit.result.cache
 /rephpactor-ext.json
+/rephpactor-ext.lock

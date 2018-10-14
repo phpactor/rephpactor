@@ -1,6 +1,6 @@
 <?php
 
-namespace Rephpactor\Composer;
+namespace Phpactor\Composer;
 
 use Composer\Factory;
 use Composer\IO\ConsoleIO;
@@ -9,13 +9,14 @@ use Composer\Json\JsonFile;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\FilesystemRepository;
 use Composer\Repository\InstalledFilesystemRepository;
+use Phpactor\Composer\EventSubscriber\PostInstallSubscriber;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\MapResolver\Resolver;
-use Rephpactor\Composer\Command\InstallCommand;
-use Rephpactor\Composer\Command\ListCommand;
-use Rephpactor\Core\CoreExtension;
-use Rephpactor\Extension;
+use Phpactor\Composer\Command\InstallCommand;
+use Phpactor\Composer\Command\ListCommand;
+use Phpactor\Core\CoreExtension;
+use Phpactor\Extension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -26,12 +27,14 @@ class ComposerExtension implements Extension
 {
     const PARAM_EXTENSION_FILENAME = 'composer.extension.filename';
     const PARAM_EXTENSION_PATH = 'composer.extension_dirname';
+    const PARAM_EXTENSION_LIST_PATH = 'composer.extension_list_path';
 
     public function configure(Resolver $resolver): void
     {
         $resolver->setDefaults([
             self::PARAM_EXTENSION_FILENAME => __DIR__ . '/../../rephpactor-ext.json',
             self::PARAM_EXTENSION_PATH => __DIR__ . '/../../vendor-ext',
+            self::PARAM_EXTENSION_LIST_PATH => __DIR__ . '/../../phpactor-extensions.php',
         ]);
     }
 
@@ -61,6 +64,9 @@ class ComposerExtension implements Extension
                 $container->get('composer.io'),
                 $container->getParameter(self::PARAM_EXTENSION_FILENAME)
             );
+            $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
+                new ExtensionWriter($container->getParameter(self::PARAM_EXTENSION_LIST_PATH))
+            ));
 
             return $composer;
         });

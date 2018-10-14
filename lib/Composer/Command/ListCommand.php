@@ -5,6 +5,7 @@ namespace Phpactor\Composer\Command;
 use Composer\Composer;
 use Composer\Installer;
 use Composer\Repository\RepositoryInterface;
+use Phpactor\Composer\PhpactorExtensionPackage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,13 +38,7 @@ class ListCommand extends Command
             'Version',
             'Description',
         ]);
-        foreach ($this->repository->search('') as $info) {
-            $package = $this->repository->findPackage($info['name'], '*');
-
-            if ($package->getType() !== 'rephpactor-extension') {
-                continue;
-            }
-
+        foreach (PhpactorExtensionPackage::filter($this->repository->getPackages()) as $package) {
             $table->addRow([
                 $package->getName(),
                 $package->getFullPrettyVersion(),
