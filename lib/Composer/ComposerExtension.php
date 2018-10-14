@@ -48,7 +48,7 @@ class ComposerExtension implements Extension
         }, [ CoreExtension::TAG_COMMAND => [] ]);
 
         $container->register('composer.command.list', function (Container $container) {
-            return new ListCommand($container->get('composer.repository.local'));
+            return new ListCommand($container->get('composer.repository.combined'));
         }, [ CoreExtension::TAG_COMMAND => [] ]);
     }
 
@@ -66,7 +66,7 @@ class ComposerExtension implements Extension
         });
         
         $container->register('composer.installer', function (Container $container) {
-                $composer = $container->get('composer.composer');
+            $composer = $container->get('composer.composer');
             $installer = Installer::create(
                 $container->get('composer.io'),
                 $container->get('composer.composer')
@@ -89,10 +89,13 @@ class ComposerExtension implements Extension
         });
 
         $container->register('composer.repository.local', function (Container $container) {
+            return new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor/composer/installed.json'));
+        });
+
+        $container->register('composer.repository.combined', function (Container $container) {
             return new CompositeRepository([
-                new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor/composer/installed.json')),
-                // required??
-                new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor/dflydev/embedded-composer/.root_package.json')),
+                $container->get('composer.repository.local'),
+                new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor-ext/composer/installed.json'))
             ]);
         });
     }
@@ -100,6 +103,7 @@ class ComposerExtension implements Extension
     public function initialize(Container $container): void
     {
         $this->initializeExtensionComposerFile($container);
+        $this->includeAutoloader($container);
     }
 
     private function initializeExtensionComposerFile(Container $container): void
@@ -115,5 +119,14 @@ class ComposerExtension implements Extension
                 'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_PATH)
             ]
         ], JSON_PRETTY_PRINT));
+    }
+
+    private function includeAutoloader(Container $container)
+    {
+        $autoloadPath = $container->getParameter(self::PARAM_EXTENSION_PATH) . '/autoload.php';
+
+        if (file_exists($autoloadPath)) {
+            require($autoloadPath);
+        }
     }
 }

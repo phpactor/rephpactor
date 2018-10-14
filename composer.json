@@ -9,7 +9,6 @@
         }
     ],
     "require": {
-        "phpactor/language-server": "^1.0@dev",
         "dflydev/embedded-composer": "^1.0@dev",
         "phpactor/container": "^1.0",
         "phpactor/map-resolver": "dev-master@dev"

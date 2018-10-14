@@ -45,7 +45,6 @@ class ListCommand extends Command
 
             $table->addRow([
                 $package->getName(),
-                $package->getType(),
                 $package->getFullPrettyVersion(),
                 $package->getDescription()
             ]);

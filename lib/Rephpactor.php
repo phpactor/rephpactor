@@ -15,7 +15,7 @@ class Rephpactor
 {
     public function build(): Container
     {
-        /** @var Extension $extension */
+        /** @var Extension[] $extensions */
         $extensions = [
             new CoreExtension(),
             new ComposerExtension(),
